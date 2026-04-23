@@ -1,0 +1,73 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "biosci-chat"
+version = "0.1.0"
+description = "AI-powered biology question answering CLI"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Your Name", email = "you@example.com" }]
+keywords = ["biology", "AI", "chatbot", "openai", "bioinformatics"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "openai>=1.30",
+    "click>=8.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "pytest-mock>=3.14",
+    "ruff>=0.4",
+    "sphinx>=7.3",
+    "furo>=2024.1",
+    "sphinx-autodoc-typehints>=2.1",
+    "ghp-import>=2.1",
+    "nbsphinx>=0.9",
+    "pre-commit>=3.7",
+]
+
+[project.scripts]
+biosci-chat = "biosci_chat.cli:cli"
+
+[project.urls]
+Homepage = "https://github.com/<your-username>/biosci-chat"
+Documentation = "https://<your-username>.github.io/biosci-chat/"
+Repository = "https://github.com/<your-username>/biosci-chat"
+
+# ---------------------------------------------------------------------------
+# Tool configuration
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 99
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=biosci_chat --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["biosci_chat"]
+omit = ["tests/*", "docs/*"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
