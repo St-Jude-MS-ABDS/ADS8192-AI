@@ -2,9 +2,6 @@
 
 from __future__ import annotations
 
-import os
-from unittest.mock import MagicMock
-
 import pytest
 
 from biosci_chat.client import BiosciClient
@@ -81,3 +78,33 @@ def test_stream_concatenates_to_full_response(mock_client, mock_stream_chunks):
     client = BiosciClient()
     full = "".join(client.stream("What is BRCA1?"))
     assert "BRCA1" in full
+
+
+def test_reply_messages_sends_exact_messages(mock_client):
+    """reply_messages() forwards the exact messages list to the API."""
+    client = BiosciClient()
+    messages = [
+        {"role": "system", "content": "You are a biology assistant."},
+        {"role": "user", "content": "What is DNA?"},
+        {"role": "assistant", "content": "DNA is a molecule."},
+        {"role": "user", "content": "What about RNA?"},
+    ]
+    result = client.reply_messages(messages)
+    assert result == "BRCA1 is a tumour suppressor gene located on chromosome 17."
+    call_kwargs = mock_client.chat.completions.create.call_args.kwargs
+    assert call_kwargs["messages"] == messages
+
+
+def test_stream_messages_yields_chunks(mock_client, mock_stream_chunks):
+    """stream_messages() yields text chunks from the API."""
+    mock_client.chat.completions.create.return_value = iter(mock_stream_chunks)
+    client = BiosciClient()
+    messages = [
+        {"role": "system", "content": "You are a biology assistant."},
+        {"role": "user", "content": "What is BRCA1?"},
+    ]
+    chunks = list(client.stream_messages(messages))
+    assert len(chunks) > 0
+    call_kwargs = mock_client.chat.completions.create.call_args.kwargs
+    assert call_kwargs["messages"] == messages
+    assert call_kwargs.get("stream") is True

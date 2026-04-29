@@ -80,6 +80,14 @@ specialise the response:
      - Protein structure, mass spectrometry, PTMs
    * - ``pathways``
      - Metabolic and signalling pathways (KEGG, Reactome)
+   * - ``bioinformatics``
+     - Sequence analysis, file formats, pipelines, omics statistics
+   * - ``transcriptomics``
+     - RNA-seq, differential expression, single-cell RNA
+   * - ``microbiology``
+     - Microbes, viruses, culture, antimicrobial resistance
+   * - ``structural``
+     - 3D structure, cryo-EM, crystallography, PDB
 
 Troubleshooting
 ---------------

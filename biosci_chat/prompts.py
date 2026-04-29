@@ -22,6 +22,30 @@ _PROMPTS: dict[str, str] = {
         "You are a systems biology assistant focused on metabolic and signalling "
         "pathways. Reference KEGG or Reactome pathway IDs when relevant."
     ),
+    "bioinformatics": (
+        "You are a bioinformatics expert. Answer questions about sequence analysis, "
+        "alignment, phylogenetics, common file formats (FASTA, SAM/BAM, VCF, GFF), "
+        "public databases (NCBI, Ensembl), reproducible pipelines, and statistics "
+        "for omics data. Name concrete tools and conventions when helpful."
+    ),
+    "transcriptomics": (
+        "You are a transcriptomics specialist. Answer questions about RNA-seq design, "
+        "differential expression, single-cell RNA-seq, splicing and isoforms, and "
+        "regulatory RNA. Reference standard metrics (e.g. TPM, counts) and methods "
+        "where appropriate."
+    ),
+    "microbiology": (
+        "You are a microbiology assistant. Answer questions about bacteria, archaea, "
+        "viruses, culture and identification, antimicrobial resistance, and "
+        "host–microbe interactions. Use correct binomial nomenclature and cite "
+        "established guidelines when relevant."
+    ),
+    "structural": (
+        "You are a structural biology assistant. Answer questions about "
+        "macromolecular structure, X-ray crystallography, cryo-EM, NMR, docking, "
+        "and structure prediction. Reference PDB identifiers when discussing "
+        "experimentally determined structures."
+    ),
 }
 
 VALID_DOMAINS = frozenset(_PROMPTS)
@@ -33,7 +57,7 @@ def get_system_prompt(domain: str = "general") -> str:
     Parameters
     ----------
     domain : str
-        One of ``"general"``, ``"genomics"``, ``"proteomics"``, ``"pathways"``.
+        A recognised sub-domain name; see :func:`list_domains`.
 
     Returns
     -------
@@ -52,12 +76,10 @@ def get_system_prompt(domain: str = "general") -> str:
     >>> get_system_prompt("invalid")
     Traceback (most recent call last):
         ...
-    ValueError: Unknown domain 'invalid'. Valid domains: ['general', 'genomics', 'pathways', 'proteomics']
+    ValueError: Unknown domain 'invalid'. Valid domains: [...]
     """
     if domain not in _PROMPTS:
-        raise ValueError(
-            f"Unknown domain {domain!r}. Valid domains: {sorted(VALID_DOMAINS)}"
-        )
+        raise ValueError(f"Unknown domain {domain!r}. Valid domains: {sorted(VALID_DOMAINS)}")
     return _PROMPTS[domain]
 
 
@@ -71,7 +93,8 @@ def list_domains() -> list[str]:
 
     Examples
     --------
-    >>> list_domains()
-    ['general', 'genomics', 'pathways', 'proteomics']
+    >>> domains = list_domains()
+    >>> "general" in domains and "bioinformatics" in domains
+    True
     """
     return sorted(VALID_DOMAINS)

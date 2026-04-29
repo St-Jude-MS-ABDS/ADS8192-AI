@@ -6,8 +6,21 @@ import pytest
 
 from biosci_chat.prompts import VALID_DOMAINS, get_system_prompt, list_domains
 
+_EXPECTED_DOMAINS = frozenset(
+    {
+        "general",
+        "genomics",
+        "proteomics",
+        "pathways",
+        "bioinformatics",
+        "transcriptomics",
+        "microbiology",
+        "structural",
+    }
+)
 
-@pytest.mark.parametrize("domain", ["general", "genomics", "proteomics", "pathways"])
+
+@pytest.mark.parametrize("domain", sorted(_EXPECTED_DOMAINS))
 def test_get_system_prompt_returns_nonempty_string(domain):
     """get_system_prompt returns a non-empty string for every valid domain."""
     result = get_system_prompt(domain)
@@ -15,12 +28,10 @@ def test_get_system_prompt_returns_nonempty_string(domain):
     assert len(result) > 0
 
 
-@pytest.mark.parametrize("domain", ["general", "genomics", "proteomics", "pathways"])
-def test_get_system_prompt_content_is_domain_specific(domain):
+def test_get_system_prompt_content_is_domain_specific():
     """Each domain returns a distinct prompt string."""
-    prompts = {d: get_system_prompt(d) for d in ["general", "genomics", "proteomics", "pathways"]}
-    # All prompts must be unique
-    assert len(set(prompts.values())) == 4
+    prompts = {d: get_system_prompt(d) for d in _EXPECTED_DOMAINS}
+    assert len(set(prompts.values())) == len(_EXPECTED_DOMAINS)
 
 
 def test_get_system_prompt_raises_for_unknown_domain():
@@ -48,8 +59,8 @@ def test_list_domains_returns_sorted_list():
 
 
 def test_list_domains_contains_all_expected():
-    """list_domains contains exactly the four expected domains."""
-    assert set(list_domains()) == {"general", "genomics", "proteomics", "pathways"}
+    """list_domains contains exactly the expected domains."""
+    assert set(list_domains()) == _EXPECTED_DOMAINS
 
 
 def test_list_domains_returns_list_type():

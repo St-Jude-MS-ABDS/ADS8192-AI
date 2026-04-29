@@ -12,7 +12,7 @@ AI-powered biology question answering from the command line.
 
 ## Overview
 
-`biosci-chat` is a command-line chatbot that answers biology and bioinformatics questions using the OpenAI API. It supports four biology sub-domains with specialised system prompts:
+`biosci-chat` is a command-line chatbot that answers biology and bioinformatics questions using the OpenAI API. It supports several biology sub-domains with specialised system prompts:
 
 | Domain | Focus |
 |--------|-------|
@@ -20,6 +20,10 @@ AI-powered biology question answering from the command line.
 | `genomics` | DNA sequencing, variant calling, genome assembly |
 | `proteomics` | Protein structure, mass spectrometry, PTMs |
 | `pathways` | Metabolic and signalling pathways |
+| `bioinformatics` | Pipelines, formats (FASTA, BAM, VCF), alignment, databases |
+| `transcriptomics` | RNA-seq, differential expression, single-cell RNA |
+| `microbiology` | Bacteria, viruses, culture, antimicrobial resistance |
+| `structural` | Macromolecular structure, cryo-EM, crystallography, PDB |
 
 This project is used as the running example in the **MSABDS AI-Powered Scientific App Development** course module.
 

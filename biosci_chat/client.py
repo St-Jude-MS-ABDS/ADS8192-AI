@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Iterator
+from collections.abc import Iterator
 
 from openai import OpenAI
 
@@ -33,7 +33,50 @@ class BiosciClient:
 
     def __init__(self, model: str = DEFAULT_MODEL, api_key: str | None = None) -> None:
         self.model = model
-        self._client = OpenAI(api_key=api_key or os.environ["OPENAI_API_KEY"])
+        self._client = OpenAI(api_key=api_key or os.environ.get("OPENAI_API_KEY"))
+
+    def reply_messages(self, messages: list[dict[str, str]]) -> str:
+        """Return the assistant's reply for an arbitrary message history.
+
+        Parameters
+        ----------
+        messages : list of dict
+            Full OpenAI-style message list, e.g.
+            ``[{"role": "system", "content": "..."}, {"role": "user", "content": "..."}]``.
+
+        Returns
+        -------
+        str
+            The assistant's response text.
+        """
+        response = self._client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+        )
+        return response.choices[0].message.content
+
+    def stream_messages(self, messages: list[dict[str, str]]) -> Iterator[str]:
+        """Stream the assistant's reply for an arbitrary message history.
+
+        Parameters
+        ----------
+        messages : list of dict
+            Full OpenAI-style message list (see :meth:`reply_messages`).
+
+        Yields
+        ------
+        str
+            Successive text chunks from the model.
+        """
+        stream = self._client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            stream=True,
+        )
+        for chunk in stream:
+            delta = chunk.choices[0].delta.content
+            if delta:
+                yield delta
 
     def ask(self, question: str, domain: str = "general") -> str:
         """Send a biology question and return the full response.
@@ -43,9 +86,8 @@ class BiosciClient:
         question : str
             The user's question in plain English.
         domain : str
-            Biology sub-domain for prompt specialisation.
-            One of ``"general"``, ``"genomics"``, ``"proteomics"``,
-            ``"pathways"``.
+            Biology sub-domain for prompt specialisation. Valid names are given by
+            ``biosci_chat.prompts.list_domains()``.
 
         Returns
         -------
@@ -65,14 +107,12 @@ class BiosciClient:
         True
         """
         system_prompt = get_system_prompt(domain)
-        response = self._client.chat.completions.create(
-            model=self.model,
-            messages=[
+        return self.reply_messages(
+            [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": question},
-            ],
+            ]
         )
-        return response.choices[0].message.content
 
     def stream(self, question: str, domain: str = "general") -> Iterator[str]:
         """Stream a biology answer token by token.
@@ -97,15 +137,9 @@ class BiosciClient:
         True
         """
         system_prompt = get_system_prompt(domain)
-        stream = self._client.chat.completions.create(
-            model=self.model,
-            messages=[
+        yield from self.stream_messages(
+            [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": question},
-            ],
-            stream=True,
+            ]
         )
-        for chunk in stream:
-            delta = chunk.choices[0].delta.content
-            if delta:
-                yield delta
