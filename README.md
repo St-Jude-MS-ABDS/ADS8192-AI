@@ -1,12 +1,10 @@
 # biosci-chat
 
-[![CI](https://github.com/<username>/biosci-chat/actions/workflows/ci.yml/badge.svg)](https://github.com/<username>/biosci-chat/actions/workflows/ci.yml)
-[![Docs](https://github.com/<username>/biosci-chat/actions/workflows/docs.yml/badge.svg)](https://github.com/<username>/biosci-chat/actions/workflows/docs.yml)
+[![CI](https://github.com/St-Jude-MS-ABDS/ADS8192-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/St-Jude-MS-ABDS/ADS8192-AI/actions/workflows/ci.yml)
+[![Docs](https://github.com/St-Jude-MS-ABDS/ADS8192-AI/actions/workflows/docs.yml/badge.svg)](https://github.com/St-Jude-MS-ABDS/ADS8192-AI/actions/workflows/docs.yml)
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://pypi.org/project/biosci-chat/)
 
 AI-powered biology question answering from the command line.
-
-📖 **[Documentation](https://<username>.github.io/biosci-chat/)**
 
 ---
 
